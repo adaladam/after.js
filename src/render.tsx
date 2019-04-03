@@ -1,4 +1,3 @@
-import { stripBasename } from 'history/PathUtils';
 import * as React from 'react';
 import * as ReactDOMServer from 'react-dom/server';
 import Helmet from 'react-helmet';
@@ -11,7 +10,7 @@ import * as url from 'url';
 import { Request, Response } from 'express';
 import { Assets, AsyncRouteProps } from './types';
 
-const modPageFn = function<Props>(Page: React.ComponentType<Props>) {
+const modPageFn = function <Props>(Page: React.ComponentType<Props>) {
   return (props: Props) => <Page {...props} />;
 };
 
@@ -53,7 +52,7 @@ export async function render<T>(options: AfterRenderOptions<T>) {
     return { helmet, ...renderedContent };
   };
 
-  const normalizedUrl = basename ? stripBasename(req.url, basename) : req.url;
+  const normalizedUrl = basename ? utils.stripBasename(req.url, basename) : req.url;
   const { match, data } = await loadInitialProps(routes, url.parse(normalizedUrl).pathname as string, {
     req,
     res,

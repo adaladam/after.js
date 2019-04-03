@@ -1,7 +1,6 @@
-import { stripBasename } from 'history/PathUtils';
 import { matchPath } from 'react-router-dom';
 import { AsyncRouteProps } from './types';
-import { isLoadableComponent } from './utils';
+import { isLoadableComponent, stripBasename } from './utils';
 
 /**
  * This helps us to make sure all the async code is loaded before rendering.
