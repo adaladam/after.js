@@ -1,3 +1,4 @@
+import { stripBasename } from 'history/PathUtils';
 import * as React from 'react';
 import * as ReactDOMServer from 'react-dom/server';
 import Helmet from 'react-helmet';
@@ -52,7 +53,8 @@ export async function render<T>(options: AfterRenderOptions<T>) {
     return { helmet, ...renderedContent };
   };
 
-  const { match, data } = await loadInitialProps(routes, url.parse(req.url).pathname as string, {
+  const normalizedUrl = basename ? stripBasename(req.url, basename) : req.url;
+  const { match, data } = await loadInitialProps(routes, url.parse(normalizedUrl).pathname as string, {
     req,
     res,
     ...rest
@@ -70,7 +72,7 @@ export async function render<T>(options: AfterRenderOptions<T>) {
     return;
   }
 
-  const reactRouterMatch = matchPath(req.url, match);
+  const reactRouterMatch = matchPath(normalizedUrl, match);
 
   const { html, ...docProps } = await Doc.getInitialProps({
     req,
