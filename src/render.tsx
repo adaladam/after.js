@@ -26,12 +26,13 @@ export interface AfterRenderOptions<T> {
   res: Response;
   assets: Assets;
   routes: AsyncRouteProps[];
+  basename?: string;
   document?: typeof DefaultDoc;
   customRenderer?: (element: React.ReactElement<T>) => { html: string };
 }
 
 export async function render<T>(options: AfterRenderOptions<T>) {
-  const { req, res, routes, assets, document: Document, customRenderer, ...rest } = options;
+  const { req, res, routes, assets, basename, document: Document, customRenderer, ...rest } = options;
   const Doc = Document || DefaultDoc;
 
   const context = {};
@@ -40,7 +41,7 @@ export async function render<T>(options: AfterRenderOptions<T>) {
     const defaultRenderer = (element: React.ReactElement<T>) => ({ html: ReactDOMServer.renderToString(element) });
     const renderer = customRenderer || defaultRenderer;
     const asyncOrSyncRender = renderer(
-      <StaticRouter location={req.url} context={context}>
+      <StaticRouter location={req.url} context={context} basename={basename || ''}>
         {fn(After)({ routes, data })}
       </StaticRouter>
     );
