@@ -10,6 +10,7 @@ export interface AfterpartyProps extends RouteComponentProps<any> {
   data?: Promise<any>[];
   routes: AsyncRouteProps[];
   match: Match<any>;
+  errorPage?: string;
 }
 
 export interface AfterpartyState {
@@ -42,7 +43,7 @@ class Afterparty extends React.Component<AfterpartyProps, AfterpartyState> {
         data: undefined // unless you want to keep it
       });
 
-      const { data, match, routes, history, location, staticContext, ...rest } = nextProps;
+      const { data, match, routes, history, location, staticContext, errorPage, ...rest } = nextProps;
 
       loadInitialProps(this.props.routes, nextProps.location.pathname, {
         location: nextProps.location,
@@ -52,9 +53,11 @@ class Afterparty extends React.Component<AfterpartyProps, AfterpartyState> {
         .then(({ data }) => {
           this.setState({ previousLocation: null, data });
         })
-        .catch((e) => {
-          // @todo we should more cleverly handle errors???
+        .catch((e: any) => {
           console.log(e);
+          if (errorPage) {
+            nextProps.history.replace(errorPage);
+          }
         });
     }
   }
