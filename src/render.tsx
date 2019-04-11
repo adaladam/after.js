@@ -34,7 +34,7 @@ export interface AfterRenderOptions<T> {
 }
 
 export async function render<T>(options: AfterRenderOptions<T>) {
-  const { req, res, routes, assets, basename, document: Document, customRenderer, ...rest } = options;
+  const { req, res, routes, assets, basename, location, document: Document, customRenderer, ...rest } = options;
   const Doc = Document || DefaultDoc;
 
   const context = {};
@@ -58,6 +58,7 @@ export async function render<T>(options: AfterRenderOptions<T>) {
   const { match, data } = await loadInitialProps(routes, url.parse(normalizedUrl).pathname as string, {
     req,
     res,
+    location,
     ...rest
   });
 
