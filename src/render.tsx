@@ -9,6 +9,7 @@ import * as utils from './utils';
 import * as url from 'url';
 import { Request, Response } from 'express';
 import { Assets, AsyncRouteProps } from './types';
+import { Location } from 'history';
 
 const modPageFn = function <Props>(Page: React.ComponentType<Props>) {
   return (props: Props) => <Page {...props} />;
@@ -27,6 +28,7 @@ export interface AfterRenderOptions<T> {
   assets: Assets;
   routes: AsyncRouteProps[];
   basename?: string;
+  location?: Location,
   document?: typeof DefaultDoc;
   customRenderer?: (element: React.ReactElement<T>) => { html: string };
 }
