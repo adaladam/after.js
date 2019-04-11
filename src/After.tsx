@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Switch, Route, withRouter, match as Match, RouteComponentProps } from 'react-router-dom';
+import { Switch, Route, withRouter, match as Match, RouteComponentProps, matchPath } from 'react-router-dom';
 import { loadInitialProps } from './loadInitialProps';
 import { History, Location } from 'history';
 import { AsyncRouteProps } from './types';
@@ -32,33 +32,32 @@ class Afterparty extends React.Component<AfterpartyProps, AfterpartyState> {
     this.prefetcherCache = {};
   }
 
-  // only runs clizzient
-  componentWillReceiveProps(nextProps: AfterpartyProps) {
-    const navigated = nextProps.location !== this.props.location;
+  componentDidUpdate(prevProps: AfterpartyProps, prevState: AfterpartyState) {
+    const route = this.props.routes.find(r => matchPath(this.props.location.pathname, r) != null);
+    const prevRoute = this.props.routes.find(r => matchPath(prevProps.location.pathname, r) != null);
+
+    let navigated = route !== prevRoute;
     if (navigated) {
       window.scrollTo(0, 0);
-      // save the location so we can render the old screen
       this.setState({
-        previousLocation: this.props.location,
+        // save the location so we can render the old screen
+        previousLocation: prevProps.location,
         data: undefined // unless you want to keep it
       });
 
-      const { data, match, routes, history, location, staticContext, errorPage, ...rest } = nextProps;
-
-      loadInitialProps(this.props.routes, nextProps.location.pathname, {
-        location: nextProps.location,
-        history: nextProps.history,
+      const { children, data, match, routes, history, location, staticContext, errorPage, ...rest } = this.props;
+      loadInitialProps(this.props.routes, this.props.location.pathname, {
+        location: this.props.location,
+        history: this.props.history,
         ...rest
-      })
-        .then(({ data }) => {
-          this.setState({ previousLocation: null, data });
-        })
-        .catch((e: any) => {
-          console.log(e);
-          if (errorPage) {
-            nextProps.history.replace(errorPage);
-          }
-        });
+      }).then(({ data }) => {
+        this.setState({ previousLocation: null, data });
+      }).catch((e: any) => {
+        console.log(e);
+        if (errorPage) {
+          this.props.history.replace(errorPage);
+        }
+      });
     }
   }
 

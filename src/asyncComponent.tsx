@@ -41,9 +41,7 @@ export function asyncComponent<Props>({
       this.state = {
         Component
       };
-    }
 
-    componentWillMount() {
       AsyncRouteComponent.load().then(this.updateState);
     }
 
