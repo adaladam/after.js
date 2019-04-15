@@ -22,7 +22,7 @@ const modPageFn = function <Props>(Page: React.ComponentType<Props>) {
  It has to return an object of shape { html, ... }, in which html will be used as the rendered string
  Other props will be also pass to the Document component
   */
-export interface AfterRenderOptions<T> {
+export interface AfterRenderOptions<T, TExtra = {}> {
   req: Request;
   res: Response;
   assets: Assets;
@@ -30,11 +30,12 @@ export interface AfterRenderOptions<T> {
   basename?: string;
   location?: Location,
   document?: typeof DefaultDoc;
+  extra?: TExtra,
   customRenderer?: (element: React.ReactElement<T>) => { html: string };
 }
 
-export async function render<T>(options: AfterRenderOptions<T>) {
-  const { req, res, routes, assets, basename, location, document: Document, customRenderer, ...rest } = options;
+export async function render<T, TExtra = {}>(options: AfterRenderOptions<T, TExtra>) {
+  const { req, res, routes, assets, basename, extra, location, document: Document, customRenderer, ...rest } = options;
   const Doc = Document || DefaultDoc;
 
   const context = {};
@@ -58,6 +59,7 @@ export async function render<T>(options: AfterRenderOptions<T>) {
   const { match, data } = await loadInitialProps(routes, url.parse(normalizedUrl).pathname as string, {
     req,
     res,
+    extra,
     location,
     ...rest
   });

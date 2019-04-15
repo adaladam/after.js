@@ -11,6 +11,7 @@ export interface AfterpartyProps extends RouteComponentProps<any> {
   routes: AsyncRouteProps[];
   match: Match<any>;
   errorPage?: string;
+  extra?: any;
 }
 
 export interface AfterpartyState {

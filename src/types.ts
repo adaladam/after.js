@@ -14,13 +14,14 @@ export interface DocumentProps {
   match: Match<any> | null;
 }
 
-export interface CtxBase {
+export interface CtxBase<TExtra = {}> {
   req?: IncomingMessage;
   res?: ServerResponse;
   history?: History;
-  location?: Location; 
+  location?: Location;
+  extra?: TExtra;
 }
-export interface Ctx<P> extends CtxBase {
+export interface Ctx<P, TExtra = {}> extends CtxBase<TExtra> {
   match: Match<P>;
 }
 
@@ -35,7 +36,7 @@ export interface AsyncComponent {
 
 export interface AsyncRouteComponent<Props = {}>
   extends AsyncComponent,
-    React.Component<DocumentProps & Props, AsyncRouteComponentState> {}
+  React.Component<DocumentProps & Props, AsyncRouteComponentState> { }
 
 export type AsyncRouteComponentType<Props> =
   | React.ComponentClass<Props> & AsyncComponent
@@ -58,13 +59,13 @@ export interface InitialProps {
 
 export type Module<P> =
   | {
-      default?: P;
-      [x: string]: any;
-    }
+    default?: P;
+    [x: string]: any;
+  }
   | {
-      exports?: P;
-      [x: string]: any;
-    };
+    exports?: P;
+    [x: string]: any;
+  };
 
 export interface Assets {
   [name: string]: {
