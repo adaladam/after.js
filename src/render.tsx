@@ -9,7 +9,7 @@ import * as utils from './utils';
 import * as url from 'url';
 import { Request, Response } from 'express';
 import { Assets, AsyncRouteProps } from './types';
-import { Location } from 'history';
+import { Location, createLocation } from 'history';
 
 const modPageFn = function <Props>(Page: React.ComponentType<Props>) {
   return (props: Props) => <Page {...props} />;
@@ -56,11 +56,12 @@ export async function render<T, TExtra = {}>(options: AfterRenderOptions<T, TExt
   };
 
   const normalizedUrl = basename ? utils.stripBasename(req.url, basename) : req.url;
+  const normalizedLocation = createLocation(normalizedUrl);
   const { match, data } = await loadInitialProps(routes, url.parse(normalizedUrl).pathname as string, {
     req,
     res,
     extra,
-    location,
+    location: normalizedLocation,
     ...rest
   });
 
