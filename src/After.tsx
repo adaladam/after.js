@@ -37,7 +37,13 @@ class Afterparty extends React.Component<AfterpartyProps, AfterpartyState> {
     const route = this.props.routes.find(r => matchPath(this.props.location.pathname, r) != null);
     const prevRoute = this.props.routes.find(r => matchPath(prevProps.location.pathname, r) != null);
 
-    let navigated = route !== prevRoute;
+    let { reload } = this.props.location.state || { reload: false };
+    if (reload) {
+      const { reload, ...state } = this.props.location.state;
+      this.props.location.state = state;
+    }
+
+    let navigated = route !== prevRoute || reload;
     if (navigated) {
       window.scrollTo(0, 0);
       this.setState({
