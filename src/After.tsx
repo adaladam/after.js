@@ -10,7 +10,7 @@ export interface AfterpartyProps extends RouteComponentProps<any> {
   data?: Promise<any>[];
   routes: AsyncRouteProps[];
   match: Match<any>;
-  errorPage?: string;
+  errorPage?: string | ((err: any) => string);
   extra?: any;
 }
 
@@ -61,8 +61,11 @@ class Afterparty extends React.Component<AfterpartyProps, AfterpartyState> {
         this.setState({ previousLocation: null, data });
       }).catch((e: any) => {
         console.log(e);
-        if (errorPage) {
+        if (typeof errorPage === 'string') {
           this.props.history.replace(errorPage);
+        } else if (typeof errorPage === 'function') {
+          const errorPagePath = errorPage(e);
+          this.props.history.replace(errorPagePath);
         }
       });
     }
