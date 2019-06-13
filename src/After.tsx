@@ -43,7 +43,8 @@ class Afterparty extends React.Component<AfterpartyProps, AfterpartyState> {
       this.props.location.state = state;
     }
 
-    let navigated = route !== prevRoute || reload;
+    let wentBack = (this.props.history.action === 'POP' && this.props.location.pathname !== prevProps.location.pathname);
+    let navigated = route !== prevRoute || reload || wentBack;
     if (navigated) {
       window.scrollTo(0, 0);
       this.setState({
